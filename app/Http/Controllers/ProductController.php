@@ -30,6 +30,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate($this->product->rules(), $this->product->feedback());
+
         $product = $this->product->create($request->all());
         return response()->json($product, 201);
     }
@@ -58,6 +60,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate($this->product->rules(), $this->product->feedback());
+
         $product = $this->product->find($id);
         if (!$product) {
             return response()->json(['erro'=>'Produto de id '.$id.' não existe.'], 404);
