@@ -19,3 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('tag', 'App\Http\Controllers\TagController');
+Route::apiResource('product', 'App\Http\Controllers\ProductController');
