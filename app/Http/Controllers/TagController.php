@@ -29,6 +29,8 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate($this->tag->rules(), $this->tag->feedback());
+
         $tag = $this->tag->create($request->all());
         return response()->json($tag, 201);
     }
@@ -57,6 +59,8 @@ class TagController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate($this->tag->rules(), $this->tag->feedback());
+
         $tag = $this->tag->find($id);
         if (!$tag) {
             return response()->json(['erro'=>'Tag de id '.$id.' não existe.'], 404);
