@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
+    public function __construct(Tag $tag) {
+        $this->tag = $tag;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +17,8 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $tag = $this->tag->get();
+        return response()->json($tag, 200);
     }
 
     /**
@@ -35,51 +29,57 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tag = $this->tag->create($request->all());
+        return response()->json($tag, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  Integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Tag $tag)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tag $tag)
-    {
-        //
+        $tag = $this->tag->find($id);
+        if (!$tag) {
+            return response()->json(['erro'=>'Tag de id '.$id.' não existe.'], 404);
+        }
+        return response()->json($tag, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
+     * @param  Integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, $id)
     {
-        //
+        $tag = $this->tag->find($id);
+        if (!$tag) {
+            return response()->json(['erro'=>'Tag de id '.$id.' não existe.'], 404);
+        }
+
+        $tag->fill($request->all());
+        $tag->save();
+        return response()->json($tag, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  Integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tag $tag)
+    public function destroy($id)
     {
-        //
+        $tag = $this->tag->find($id);
+        if (!$tag) {
+            return response()->json(['erro'=>'Tag de id '.$id.' não existe.'], 404);
+        }
+        $tag->delete();
+        return response()->json($tag, 200);
     }
 }
