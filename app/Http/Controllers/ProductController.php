@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = $this->product->get();
+        $product = $this->product->with('product_tags')->get();
         return response()->json($product, 200);
     }
 
@@ -68,7 +68,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = $this->product->find($id);
+        $product = $this->product->with('product_tags')->find($id);
         if (!$product) {
             return response()->json(['erro'=>'Produto de id '.$id.' não existe.'], 404);
         }
