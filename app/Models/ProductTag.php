@@ -9,6 +9,7 @@ class ProductTag extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['product_id', 'tag_id'];
     protected $primaryKey = ['product_id', 'tag_id'];
     public $incrementing = false;
 }
