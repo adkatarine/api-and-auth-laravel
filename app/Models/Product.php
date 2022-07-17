@@ -14,16 +14,14 @@ class Product extends Model
 
     public function rules() {
         return [
-            'id' => 'required|integer',
-            'name' => 'required|unique:products,name,',
+            'file' => 'required|file|mimes:json,xml',
         ];
     }
 
     public function feedback() {
         return [
             'required' => 'O campo :attribute é obrigatório',
-            'id.integer' => 'O id do produto precisa ser do tipo inteiro',
-            'name.unique' => 'O name do produto já existe',
+            'file.mimes' => 'O arquivo deve ser do tipo JSON ou XML',
         ];
     }
 }

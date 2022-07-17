@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Tag;
+use App\Models\ProductTag;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -32,7 +34,27 @@ class ProductController extends Controller
     {
         $request->validate($this->product->rules(), $this->product->feedback());
 
-        $product = $this->product->create($request->all());
+        if($request->file->extension() == 'json') {
+            $json = file_get_contents($request->file('file'));
+            $data = json_decode($json);
+            foreach ($data->products as $value) {
+
+                $product = $this->product->create([
+                    'id' => $value->id,
+                    'name' => $value->name,
+                ]);
+            }
+        } else {
+            $xml = simplexml_load_file($request->file('file'));
+            foreach ($xml as $value) {
+                $product = $this->product->create([
+                    'id' => $value->id,
+                    'name' => $value->name,
+                ]);
+            }
+        }
+
+
         return response()->json($product, 201);
     }
 
