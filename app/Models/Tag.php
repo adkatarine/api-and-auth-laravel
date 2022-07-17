@@ -11,6 +11,10 @@ class Tag extends Model
 
     protected $fillable = ['name'];
 
+    public function product_tags() {
+        return $this->hasMany('App\Models\ProductTag');
+    }
+
     public function rules() {
         return [
             'name' => 'required|unique:tags,name,',

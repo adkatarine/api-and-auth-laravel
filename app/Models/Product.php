@@ -12,6 +12,10 @@ class Product extends Model
     protected $fillable = ['id', 'name'];
     public $incrementing = false;
 
+    public function product_tags() {
+        return $this->hasMany('App\Models\ProductTag');
+    }
+
     public function rules() {
         return [
             'file' => 'required|file|mimes:json,xml',
