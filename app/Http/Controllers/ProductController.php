@@ -48,7 +48,6 @@ class ProductController extends Controller
                 if(!$tag) {
                     return response()->json(['erro'=>'Tag '.$tagName.' não está cadastrada.'], 404);
                 }
-
                 if(!ProductTag::where('product_id',$product->id)->where('tag_id',$tag->id)->first()){
                     ProductTag::create([
                         'product_id' => $product->id,
@@ -57,7 +56,7 @@ class ProductController extends Controller
                 }
             }
         }
-        return response()->json($product, 201);
+        return response()->json($products, 201);
     }
 
     /**
