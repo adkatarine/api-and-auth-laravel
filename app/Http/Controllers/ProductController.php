@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\ProductTag;
 use App\Helper\FileAdapter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -22,11 +23,13 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = $this->product
+        $products = Cache::remember('list_products', 1440, function () {
+            return $this->product
             ->select('products.id', 'products.name', 'products.created_at', 'products.updated_at',
                     'product_tags.product_id', 'product_tags.tag_id', 'tags.name AS tag')
             ->join('product_tags', 'products.id', '=','product_tags.product_id')
             ->join('tags', 'product_tags.tag_id', '=','tags.id')->get();
+        });
         if($request->has('filter')) {
             $filters = explode(';', $request->filter);
             foreach ($filters as $condition) {
