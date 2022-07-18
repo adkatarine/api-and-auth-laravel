@@ -17,12 +17,24 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $product = $this->product->with('product_tags')->get();
-        return response()->json($product, 200);
+        $products = $this->product
+            ->select('products.id', 'products.name', 'products.created_at', 'products.updated_at',
+                    'product_tags.product_id', 'product_tags.tag_id', 'tags.name AS tag')
+            ->join('product_tags', 'products.id', '=','product_tags.product_id')
+            ->join('tags', 'product_tags.tag_id', '=','tags.id')->get();
+        if($request->has('filter')) {
+            $filters = explode(';', $request->filter);
+            foreach ($filters as $condition) {
+                $value = explode(':', $condition);
+                $products = $products->where($value[0], $value[1], $value[2]);
+            }
+        }
+        return response()->json($products, 200);
     }
 
     /**
