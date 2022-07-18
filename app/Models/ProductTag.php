@@ -14,10 +14,10 @@ class ProductTag extends Model
     public $incrementing = false;
 
     public function product() {
-        return $this->belongsTo('App\Models\Product');
+        return $this->belongsTo(Product::class);
     }
 
     public function tag() {
-        return $this->belongsTo('App\Models\Tag');
+        return $this->belongsTo(Tag::class);
     }
 }

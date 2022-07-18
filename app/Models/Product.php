@@ -13,7 +13,7 @@ class Product extends Model
     public $incrementing = false;
 
     public function product_tags() {
-        return $this->hasMany('App\Models\ProductTag');
+        return $this->hasMany(ProductTag::class);
     }
 
     public function rules() {
