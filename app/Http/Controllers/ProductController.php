@@ -7,6 +7,8 @@ use App\Models\Tag;
 use App\Models\ProductTag;
 use App\Helper\FileAdapter;
 use Illuminate\Http\Request;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductCollection;
 use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
@@ -24,11 +26,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $products = Cache::remember('list_products', 1440, function () {
-            return $this->product
-            ->select('products.id', 'products.name', 'products.created_at', 'products.updated_at',
-                    'product_tags.product_id', 'product_tags.tag_id', 'tags.name AS tag')
-            ->join('product_tags', 'products.id', '=','product_tags.product_id')
-            ->join('tags', 'product_tags.tag_id', '=','tags.id')->get();
+            return new ProductCollection($this->product->with('product_tags.tag')->get());
         });
         if($request->has('filter')) {
             $filters = explode(';', $request->filter);
@@ -71,7 +69,7 @@ class ProductController extends Controller
                 }
             }
         }
-        return response()->json($products, 201);
+        return response()->json("Produtos cadastrados com sucesso!", 201);
     }
 
     /**
@@ -82,7 +80,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = $this->product->with('product_tags')->find($id);
+        $product = new ProductResource($this->product->with('product_tags.tag')->find($id));
         if (!$product) {
             return response()->json(['erro'=>'Produto de id '.$id.' não existe.'], 404);
         }
