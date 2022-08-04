@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Http\Requests\TagRequest;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -24,13 +25,11 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  TagRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TagRequest $request)
     {
-        $request->validate($this->tag->rules(), $this->tag->feedback());
-
         $tag = $this->tag->create($request->all());
         return response()->json($tag, 201);
     }
@@ -53,14 +52,12 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  TagRequest  $request
      * @param  Integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TagRequest $request, $id)
     {
-        $request->validate($this->tag->rules(), $this->tag->feedback());
-
         $tag = $this->tag->find($id);
         if (!$tag) {
             return response()->json(['erro'=>'Tag de id '.$id.' não existe.'], 404);

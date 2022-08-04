@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\ProductTag;
 use App\Helper\FileAdapter;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductCollection;
 use Illuminate\Support\Facades\Cache;
@@ -41,13 +42,11 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ProductRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $request->validate($this->product->rules(), $this->product->feedback());
-
         $products = FileAdapter::file($request->file('file'));
 
         foreach ($products as $value) {
@@ -90,14 +89,12 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ProductRequest  $request
      * @param  Integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        $request->validate($this->product->rules(), $this->product->feedback());
-
         $product = $this->product->find($id);
         if (!$product) {
             return response()->json(['erro'=>'Produto de id '.$id.' não existe.'], 404);
